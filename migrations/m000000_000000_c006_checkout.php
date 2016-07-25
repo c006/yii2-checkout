@@ -89,6 +89,7 @@ class m000000_000000_c006_checkout extends Migration
                     'order_id' => 'INT(10) UNSIGNED NOT NULL',
                     'transaction_id' => 'VARCHAR(100) NULL',
                     'transaction_type_id' => 'SMALLINT(5) UNSIGNED NOT NULL',
+                    'auth' => 'VARCHAR(20) NULL',
                     'fee' => 'DECIMAL(10,2) UNSIGNED NOT NULL DEFAULT \'0.00\'',
                     'amount' => 'DECIMAL(10,2) NOT NULL',
                     'description' => 'VARCHAR(500) NULL',

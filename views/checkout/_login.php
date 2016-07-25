@@ -32,8 +32,11 @@ $model = new \c006\checkout\models\form\Login();
     </div>
     <div class="form-group">
         <div class="table">
-            <div class="table-cell align-left"><?= Html::button('Login & Continue', ['class' => 'btn btn-primary', 'id' => 'button-continue']) ?></div>
-            <div class="table-cell align-right"><?= Html::button('Recover Password', ['class' => 'btn btn-success', 'id' => 'button-forgot']) ?></div>
+            <div class="table-cell align-left"><?= Html::submitButton('Login & Continue', ['class' => 'btn btn-primary', 'id' => 'button-continue']) ?></div>
+            <div class="table-cell align-right">
+                <?= Html::button('Recover Password', ['class' => 'btn btn-secondary', 'id' => 'button-forgot']) ?>
+                <?= Html::a('Register', '/user/signup', ['class' => 'btn btn-secondary', 'id' => 'button-signup']) ?>
+            </div>
         </div>
     </div>
     <?php ActiveForm::end(); ?>

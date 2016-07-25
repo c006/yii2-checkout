@@ -11,6 +11,7 @@ use Yii;
  * @property integer $order_id
  * @property string $transaction_id
  * @property integer $transaction_type_id
+ * @property integer $auth
  * @property string $fee
  * @property string $amount
  * @property string $description
@@ -49,7 +50,8 @@ class CheckoutTransaction extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'order_id' => Yii::t('app', 'Order ID'),
             'transaction_id' => Yii::t('app', 'Transaction ID'),
-            'transaction_type_id' => Yii::t('app', 'Transaction Type ID'),
+            'transaction_type_id' => Yii::t('app', 'Transaction Type'),
+            'auth' => Yii::t('app', 'Auth Code'),
             'fee' => Yii::t('app', 'Fee'),
             'amount' => Yii::t('app', 'Amount'),
             'description' => Yii::t('app', 'Description'),

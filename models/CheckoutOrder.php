@@ -13,7 +13,7 @@ use Yii;
  * @property string $subtotal
  * @property string $shipping
  * @property string $tax
- * @property string $total
+ * @property float $total
  */
 class CheckoutOrder extends \yii\db\ActiveRecord
 {
