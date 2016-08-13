@@ -20,7 +20,7 @@ use yii\widgets\ActiveForm;
 
 <div id="shipping-container">
 
-    <div class="item-container">
+    <div class="item-container marging-bottom-20">
 
         <?php $form = ActiveForm::begin([
             'id' => 'form-shipping-' . time(),
@@ -58,7 +58,7 @@ use yii\widgets\ActiveForm;
         </div>
     </div>
 
-    <div class="form-group marging-top-10">
+    <div class="form-group margin-top-10">
         <?= Html::submitButton('Continue', ['class' => 'btn btn-primary', 'id' => 'button-continue']) ?>
     </div>
     <?php ActiveForm::end(); ?>
@@ -78,7 +78,7 @@ use yii\widgets\ActiveForm;
                     show_submit_spinner();
                     $.ajax({
                         dataType: "json",
-                        url: '/common/address',
+                        url: '/c006-common/address',
                         data: {country: $country.val(), postal_code: $this.val()},
                         success: function (data) {
                             console.log(data);

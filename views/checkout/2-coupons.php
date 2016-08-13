@@ -18,7 +18,7 @@ use yii\helpers\Html;
 
         <div class="table">
             <div class="table-cell vertical-align-top padding-10">
-                <?= yii\base\View::render('@c006/coupon/views/frontend/index', []) ?>
+                <?= yii\base\View::render('@c006/coupon/views/frontend/index', ['return_url'=> $return_url]) ?>
             </div>
             <div class="table-cell vertical-align-top padding-10">
 

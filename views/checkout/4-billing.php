@@ -12,12 +12,12 @@ use yii\widgets\ActiveForm;
 
 <style>
     #credit-cart {
-        display: block;
-    }
+        display : block;
+        }
 
     #bank-transfer {
-        display: none;
-    }
+        display : none;
+        }
 </style>
 
 <div class="title-large">Billing</div>
@@ -33,11 +33,14 @@ use yii\widgets\ActiveForm;
 
 <div id="shipping-container">
 
-    <div class="form-group">
-        <select id="billing-choose" class="form-control">
-            <option value="credit-cart">Credit Card</option>
-            <option value="bank-transfer">Bank Transfer</option>
-        </select>
+    <div class="item-container margin-top-20 margin-bottom-20">
+        <div class="title-medium">Payment Type</div>
+        <div class="form-group">
+            <select id="billing-choose" class="form-control">
+                <option value="credit-cart">Credit Card</option>
+                <option value="bank-transfer">Bank Transfer</option>
+            </select>
+        </div>
     </div>
 
     <div id="credit-cart" class="container-payment">

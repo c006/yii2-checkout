@@ -110,11 +110,15 @@ class CheckoutController extends Controller
     public function action2()
     {
 
-        if (TRUE) { /* Skip Coupons */
+        if (0) { /* Skip Coupons */
             return $this->redirect('/checkout/3');
         }
 
-        return $this->render('2-coupons', []);
+        $return_url = '/checkout/2';
+
+        return $this->render('2-coupons', [
+            'return_url'=> $return_url,
+        ]);
     }
 
 
