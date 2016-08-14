@@ -18,6 +18,7 @@ use c006\checkout\models\form\BillingCreditCard;
 use c006\checkout\models\form\Shipping;
 use c006\common\assets\AppCommon;
 use c006\email\WidgetEmailer;
+use c006\preferences\assets\AppPrefs;
 use c006\user\assets\AppHelper;
 use c006\user\models\form\Login;
 use Yii;
@@ -73,7 +74,7 @@ class CheckoutController extends Controller
     public function actionIndex()
     {
 
-        if (!Yii::$app->user->isGuest) {
+        if ($this->session->get('email', 0)) {
             return $this->redirect('/checkout/2');
         }
 
@@ -110,7 +111,7 @@ class CheckoutController extends Controller
     public function action2()
     {
 
-        if (0) { /* Skip Coupons */
+        if (AppPrefs::getPreference('coupon_enabled') == FALSE) {
             return $this->redirect('/checkout/3');
         }
 

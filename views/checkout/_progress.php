@@ -6,23 +6,36 @@
 
 <style>
     #progress-container {
-        display :block;
-    }
+        display : block;
+        }
 
     #progress-container .table {
-        margin :auto;
-        width  :auto;
-    }
+        margin : auto;
+        width  : auto;
+        }
 
-    #progress-container .icon {
-        width           :20px;
-        height          :20px;
-        background-size :20px;
-    }
+    #progress-container .icon-progress {
+        display               : inline-block;
+        width                 : 20px;
+        height                : 20px;
+        -webkit-border-radius : 10px;
+        -moz-border-radius    : 10px;
+        border-radius         : 10px;
+        cursor                : pointer;
+        }
 
-    #progress-container .icon-progress-on {
-        cursor :pointer;
-    }
+    #progress-container .icon-progress-0 {
+        background-color : #CCCCCC;
+        }
+
+    #progress-container .icon-progress-1 {
+        background-color : #ae9d4f;
+        }
+
+    #progress-container .icon-progress-2 {
+        background-color : #ff8300;
+        }
+
 </style>
 
 <div id="progress-container">
@@ -32,7 +45,7 @@
 
                 <div class="table-cell padding-10">
                     <?php if ($item['url']) : ?><a href="<?= $item['url'] ?>"><?php endif ?>
-                        <span class="icon <?= ($item['progress']) ? 'icon-progress-on' : 'icon-progress-off' ?>" title="<?= $item['alt'] ?>"></span>
+                        <span class="icon-progress icon-progress-<?= $item['progress'] ?>" title="<?= $item['alt'] ?>"></span>
                         <?php if ($item['url']) : ?></a><?php endif ?>
                 </div>
             <?php endforeach ?>
