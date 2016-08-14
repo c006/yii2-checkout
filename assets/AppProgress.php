@@ -13,7 +13,7 @@ class AppProgress
      */
     static public function progress()
     {
-        $progress = [1, 0, 0, 0, 0, 0];
+        $progress = [0, 0, 0, 0, 0, 0];
         if (Yii::$app->session->get('progress', 0) == FALSE) {
             Yii::$app->session->set('progress', $progress);
         } else {
@@ -25,7 +25,7 @@ class AppProgress
         $uri = $uri[sizeof($uri) - 1];
 
         $array = [
-            ['url' => '/checkout', 'progress' => 1, 'alt' => 'Login'],
+            ['url' => '/checkout', 'progress' => 0, 'alt' => 'Login'],
             ['url' => '/checkout/2', 'progress' => 0, 'alt' => 'Coupon'],
             ['url' => '/checkout/3', 'progress' => 0, 'alt' => 'Address'],
             ['url' => '/checkout/4', 'progress' => 0, 'alt' => 'Payment'],

@@ -17,6 +17,7 @@ use c006\checkout\models\form\BillingBankTransfer;
 use c006\checkout\models\form\BillingCreditCard;
 use c006\checkout\models\form\Shipping;
 use c006\common\assets\AppCommon;
+use c006\core\assets\CoreHelper;
 use c006\email\WidgetEmailer;
 use c006\preferences\assets\AppPrefs;
 use c006\user\assets\AppHelper;
@@ -30,6 +31,9 @@ class CheckoutController extends Controller
     /** @var  $session \c006\checkout\assets\AppCheckoutSession */
     private $session;
 
+    /**
+     * @return \yii\web\Response
+     */
     function init()
     {
         parent::init();
@@ -71,6 +75,9 @@ class CheckoutController extends Controller
         }
     }
 
+    /**
+     * @return string|\yii\web\Response
+     */
     public function actionIndex()
     {
 
@@ -107,9 +114,14 @@ class CheckoutController extends Controller
         return $this->render('index', []);
     }
 
-
+    /**
+     * @return string|\yii\web\Response
+     */
     public function action2()
     {
+        if ($this->session->get('email', 0) == FALSE) {
+            return $this->redirect('/cart');
+        }
 
         if (AppPrefs::getPreference('coupon_enabled') == FALSE) {
             return $this->redirect('/checkout/3');
@@ -118,13 +130,19 @@ class CheckoutController extends Controller
         $return_url = '/checkout/2';
 
         return $this->render('2-coupons', [
-            'return_url'=> $return_url,
+            'return_url' => $return_url,
         ]);
     }
 
-
+    /**
+     * @return string|\yii\web\Response
+     */
     public function action3()
     {
+
+        if ($this->session->get('email', 0) == FALSE) {
+            return $this->redirect('/cart');
+        }
 
         if (!AppCartHelpers::requiresShipping()) {
             return $this->redirect('/checkout/4');
@@ -155,9 +173,15 @@ class CheckoutController extends Controller
             ]);
     }
 
-
+    /**
+     * @return string|\yii\web\Response
+     */
     public function action4()
     {
+
+        if ($this->session->get('email', 0) == FALSE) {
+            return $this->redirect('/cart');
+        }
 
         if (isset($_POST['BillingCreditCard'])) {
             $this->session->save('transaction_type', '1');
@@ -198,8 +222,16 @@ class CheckoutController extends Controller
             ]);
     }
 
+    /**
+     * @return string|\yii\web\Response
+     */
     public function action5()
     {
+        if ($this->session->get('email', 0) == FALSE) {
+            return $this->redirect('/cart');
+        }
+
+
         $response = FALSE;
         $cart = AppCartHelpers::getCartItems();
 
@@ -208,16 +240,21 @@ class CheckoutController extends Controller
             $shipping->$key = $this->session->get('shipping.' . $key);
         }
 
-
+        $billing = FALSE;
         if ($this->session->get('transaction_type') == '1') {
             $billing = new BillingCreditCard();
         } else if ($this->session->get('transaction_type') == '2') {
             $billing = new BillingBankTransfer();
+        } else {
+            $response = TRUE;
         }
 
-        foreach ($billing->attributes as $key => $item) {
-            $billing->$key = $this->session->get('billing.' . $key);
+        if ($billing) {
+            foreach ($billing->attributes as $key => $item) {
+                $billing->$key = $this->session->get('billing.' . $key);
+            }
         }
+
 
         if (isset($_POST['Checkout'])) {
 
@@ -243,18 +280,20 @@ class CheckoutController extends Controller
 
             $authorizeNet = new AppAuthorizeNet();
 
+
             if ($this->session->get('transaction_type') == '1') {
-                $response = $authorizeNet->actionCreditCard($billing, $order->total);
+                $response = $authorizeNet->actionCreditCard($billing, $order->total, strtoupper(CoreHelper::formatUrl(AppPrefs::getPreference('store_name'))));
             }
             if ($this->session->get('transaction_type') == '2') {
                 $response = $authorizeNet->actionBankTransfer($billing, $order->total);
             }
 
-
             if ($response != FALSE) {
 
                 $trans_fee = 0.00;
                 $trans_desc = "Remote IP: " . $_SERVER['REMOTE_ADDR'];
+
+
 
                 if (!$order->save()) {
                     echo "checkout_orders" . PHP_EOL;
@@ -342,8 +381,8 @@ class CheckoutController extends Controller
                     $order_items .= '<td valign="middle" style="padding: 5px; border-bottom: 1px solid #999999">' . $item['quantity'] . '</td>';
                     $order_items .= '<td valign="middle" style="padding: 5px; border-bottom: 1px solid #999999">' . number_format(($item['price'] * $item['quantity']), 2) . '</td>';
                     $order_items .= '</tr>';
-
                 }
+
                 $order_items .= '<tr>';
                 $order_items .= '<td valign="middle" style="padding: 5px;"></td>';
                 $order_items .= '<td valign="middle" style="padding: 5px;"></td>';
@@ -373,15 +412,17 @@ class CheckoutController extends Controller
 
                 /* Billing */
                 $order_billing = '';
-                if ($this->session->get('transaction_type') == 1) {
-                    $order_billing .= '<div>' . ucwords($billing->cc_name) . '</div>';
-                    $order_billing .= '<div>****' . substr($billing->cc_number, -4) . '</div>';
-                    $order_billing .= '<div>' . substr("00" . $billing->cc_exp_month, -2) . '/' . substr($billing->cc_exp_year, -2) . '</div>';
-                    $order_billing .= '<div>' . $billing->cc_postal_code . ', ' . AppCommon::getCountry($billing->cc_country)['char2'] . '</div>';
-                } elseif ($this->session->get('transaction_type') == 2) {
-                    $order_billing .= '<div>' . $billing->bt_bank . '</div>';
-                    $order_billing .= '<div>' . $billing->bt_name . '</div>';
-                    $order_billing .= '<div>****' . substr($billing->bt_account, -4) . '</div>';
+                if ($billing) {
+                    if ($this->session->get('transaction_type') == 1) {
+                        $order_billing .= '<div>' . ucwords($billing->cc_name) . '</div>';
+                        $order_billing .= '<div>****' . substr($billing->cc_number, -4) . '</div>';
+                        $order_billing .= '<div>' . substr("00" . $billing->cc_exp_month, -2) . '/' . substr($billing->cc_exp_year, -2) . '</div>';
+                        $order_billing .= '<div>' . $billing->cc_postal_code . ', ' . AppCommon::getCountry($billing->cc_country)['char2'] . '</div>';
+                    } elseif ($this->session->get('transaction_type') == 2) {
+                        $order_billing .= '<div>' . $billing->bt_bank . '</div>';
+                        $order_billing .= '<div>' . $billing->bt_name . '</div>';
+                        $order_billing .= '<div>****' . substr($billing->bt_account, -4) . '</div>';
+                    }
                 }
 
                 /* Shipping */
@@ -399,14 +440,14 @@ class CheckoutController extends Controller
 
                 $array = [];
                 $array['subject'] = Yii::$app->params['siteName'] . ' : Order: ' . $order->id;
-                $array['main_header'] = 'C006';
+                $array['main_header'] = AppPrefs::getPreference('store_name');
                 $array['sub_header'] = 'Thank you for your order';
                 $array['order_billing'] = $order_billing;
                 $array['order_shipping'] = $order_shipping;
                 $array['order_items'] = $order_items;
+                $array['email_to'] = $this->session->get('email');
 
-
-                WidgetEmailer::widget(['template_id' => 3, 'array' => $array]);
+                WidgetEmailer::widget(['template_id' => 5, 'array' => $array]);
 
                 return $this->redirect('success');
             }
@@ -421,7 +462,9 @@ class CheckoutController extends Controller
             ]);
     }
 
-
+    /**
+     * @return string
+     */
     public function actionSuccess()
     {
         $array = [];

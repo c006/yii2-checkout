@@ -44,9 +44,13 @@
             <?php foreach ($array as $item) : ?>
 
                 <div class="table-cell padding-10">
-                    <?php if ($item['url']) : ?><a href="<?= $item['url'] ?>"><?php endif ?>
-                        <span class="icon-progress icon-progress-<?= $item['progress'] ?>" title="<?= $item['alt'] ?>"></span>
-                        <?php if ($item['url']) : ?></a><?php endif ?>
+                    <?php if ($item['progress'] == 0) : ?>
+                        <span class="icon-progress icon-progress-<?= $item['progress'] ?>" title="<?= $item['alt'] ?>" style="cursor: default"></span>
+                    <?php else : ?>
+                        <?php if ($item['url']) : ?>
+                            <a href="<?= $item['url'] ?>"><span class="icon-progress icon-progress-<?= $item['progress'] ?>" title="<?= $item['alt'] ?>"></span></a>
+                        <?php endif ?>
+                    <?php endif ?>
                 </div>
             <?php endforeach ?>
         </div>

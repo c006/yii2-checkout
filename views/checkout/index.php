@@ -7,14 +7,7 @@
 
     <div class="title-large">Checkout</div>
 
-    <?= yii\base\View::render('_progress', ['array' => [
-        ['url' => '', 'progress' => 1, 'alt' => 'Login'],
-        ['url' => '/checkout/2', 'progress' => 1, 'alt' => 'Coupon'],
-        ['url' => '/checkout/3', 'progress' => 1, 'alt' => 'Address'],
-        ['url' => '/checkout/4', 'progress' => 1, 'alt' => 'Payment'],
-        ['url' => '/checkout/5', 'progress' => 1, 'alt' => 'Confirmation'],
-    ],
-    ]) ?>
+    <?= yii\base\View::render('_progress', ['array' => \c006\checkout\assets\AppProgress::progress()]) ?>
 
     <div class="item-container">
         <div class="table">

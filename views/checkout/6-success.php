@@ -19,7 +19,7 @@ use yii\helpers\Html;
 <div id="success-container">
 
     <div class="title-large">Thank you for ordering.</div>
-    <div class="text-title">Order: <?= $array['order_id'] ?></div>
+    <div class="title-medium">Order: <?= $array['order_id'] ?></div>
     <div class="text">
         We sent an invoice to <?= $array['email'] ?>. If you have any questions please contact us.
     </div>
