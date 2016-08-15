@@ -270,11 +270,12 @@ class CheckoutController extends Controller
 
             $order = new CheckoutOrder();
             $order->session_id = Yii::$app->session->id;
-            $order->user_id = ($this->session->get('is_guest', 0)) ? Yii::$app->user->id : 0;
+            $order->user_id = (Yii::$app->user->isGuest) ? 0 : Yii::$app->user->id;
             $order->subtotal = $cart->getCartTotal();
             $order->shipping = 0.00;
             $order->tax = 0.00;
             $order->total = ($order->subtotal + $order->shipping + $order->tax + 0.00);
+            $order->timestamp = time();
 
             /* Check transaction  */
 

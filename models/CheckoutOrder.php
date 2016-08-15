@@ -14,6 +14,7 @@ use Yii;
  * @property string $shipping
  * @property string $tax
  * @property float $total
+ * @property float $timestamp
  */
 class CheckoutOrder extends \yii\db\ActiveRecord
 {
@@ -33,7 +34,7 @@ class CheckoutOrder extends \yii\db\ActiveRecord
         return [
             [['session_id', 'subtotal', 'shipping', 'tax', 'total'], 'required'],
             [['user_id'], 'integer'],
-            [['subtotal', 'shipping', 'tax', 'total'], 'number'],
+            [['subtotal', 'shipping', 'tax', 'total', 'timestamp'], 'number'],
             [['session_id'], 'string', 'max' => 26]
         ];
     }
@@ -51,6 +52,7 @@ class CheckoutOrder extends \yii\db\ActiveRecord
             'shipping' => Yii::t('app', 'Shipping'),
             'tax' => Yii::t('app', 'Tax'),
             'total' => Yii::t('app', 'Total'),
+            'timestamp' => Yii::t('app', 'Date'),
         ];
     }
 }
