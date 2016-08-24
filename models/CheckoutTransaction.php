@@ -14,6 +14,7 @@ use Yii;
  * @property integer $auth
  * @property string $fee
  * @property string $amount
+ * @property string $remote_ip
  * @property string $description
  * @property integer $timestamp
  */
@@ -47,15 +48,16 @@ class CheckoutTransaction extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'order_id' => Yii::t('app', 'Order ID'),
-            'transaction_id' => Yii::t('app', 'Transaction ID'),
+            'id'                  => Yii::t('app', 'ID'),
+            'order_id'            => Yii::t('app', 'Order ID'),
+            'transaction_id'      => Yii::t('app', 'Transaction ID'),
             'transaction_type_id' => Yii::t('app', 'Transaction Type'),
-            'auth' => Yii::t('app', 'Auth Code'),
-            'fee' => Yii::t('app', 'Fee'),
-            'amount' => Yii::t('app', 'Amount'),
-            'description' => Yii::t('app', 'Description'),
-            'timestamp' => Yii::t('app', 'Timestamp'),
+            'auth'                => Yii::t('app', 'Auth Code'),
+            'fee'                 => Yii::t('app', 'Fee'),
+            'amount'              => Yii::t('app', 'Amount'),
+            'remote_ip'           => Yii::t('app', 'Remote IP'),
+            'description'         => Yii::t('app', 'Description'),
+            'timestamp'           => Yii::t('app', 'Timestamp'),
         ];
     }
 }

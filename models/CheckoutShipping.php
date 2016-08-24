@@ -17,6 +17,7 @@ use Yii;
  * @property string $state
  * @property string $postal_code
  * @property string $country
+ * @property string $shipping
  */
 class CheckoutShipping extends \yii\db\ActiveRecord
 {
@@ -50,16 +51,17 @@ class CheckoutShipping extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'order_id' => Yii::t('app', 'Order ID'),
-            'first_name' => Yii::t('app', 'First Name'),
-            'last_name' => Yii::t('app', 'Last Name'),
-            'address' => Yii::t('app', 'Address'),
-            'address2' => Yii::t('app', 'Address2'),
-            'city' => Yii::t('app', 'City'),
-            'state' => Yii::t('app', 'State'),
+            'id'          => Yii::t('app', 'ID'),
+            'order_id'    => Yii::t('app', 'Order ID'),
+            'first_name'  => Yii::t('app', 'First Name'),
+            'last_name'   => Yii::t('app', 'Last Name'),
+            'address'     => Yii::t('app', 'Address'),
+            'address2'    => Yii::t('app', 'Address2'),
+            'city'        => Yii::t('app', 'City'),
+            'state'       => Yii::t('app', 'State'),
             'postal_code' => Yii::t('app', 'Postal Code'),
-            'country' => Yii::t('app', 'Country'),
+            'country'     => Yii::t('app', 'Country'),
+            'shipping'    => Yii::t('app', 'Shipping'),
         ];
     }
 }

@@ -12,8 +12,8 @@ use yii\helpers\Html;
 
     <div class="item-container margin-bottom-30">
 
-        <div class="title-large">Thank you for ordering.</div>
-        <div class="title-medium">Order: <?= $array['order_id'] ?></div>
+        <div class="title-large">Thank you for ordering</div>
+        <div class="title-medium padding-top-20">Order: <?= $array['order_id'] ?></div>
         <div class="text padding-top-20">
             We sent an invoice to <?= $array['email'] ?>. If you have any questions please contact us.
         </div>

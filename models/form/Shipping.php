@@ -18,6 +18,7 @@ class Shipping extends Model
     public $country;
     public $email;
     public $use_for_billing;
+    public $shipping;
 
     public function rules()
     {

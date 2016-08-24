@@ -7,6 +7,7 @@ use c006\authorizeNet\assets\AppAuthorizeNet;
 use c006\cart\assets\AppCartHelpers;
 use c006\cart\models\Cart;
 use c006\checkout\assets\AppCheckoutSession;
+use c006\checkout\models\CheckoutCoupon;
 use c006\checkout\models\CheckoutItem;
 use c006\checkout\models\CheckoutLink;
 use c006\checkout\models\CheckoutOrder;
@@ -149,6 +150,14 @@ class CheckoutController extends Controller
         }
 
         if (isset($_POST['Shipping'])) {
+
+            if (!$_POST['Shipping']['shipping']) {
+                Alerts::setMessage('Please choose a shipping method');
+                Alerts::setAlertType(Alerts::ALERT_DANGER);
+
+                return $this->redirect('/checkout/3');
+            }
+
             foreach ($_POST['Shipping'] as $key => $value) {
                 $this->session->save('shipping.' . $key, ucwords($value));
             }
@@ -258,7 +267,7 @@ class CheckoutController extends Controller
 
         if (isset($_POST['Checkout'])) {
 
-            if (Yii::$app->session->id != $_POST['Checkout']) {
+            if (md5(Yii::$app->session->id) != $_POST['Checkout']) {
                 Alerts::setAlertType(Alerts::ALERT_INFO);
                 Alerts::setMessage("You're session has timed out");
                 Alerts::setCountdown(5);
@@ -272,15 +281,19 @@ class CheckoutController extends Controller
             $order->session_id = Yii::$app->session->id;
             $order->user_id = (Yii::$app->user->isGuest) ? 0 : Yii::$app->user->id;
             $order->subtotal = $cart->getCartTotal();
-            $order->shipping = 0.00;
+            /* ToDo : Checkout Discount */
+            //$order->discount = $cart->getDiscount();
+            $order->shipping = ($this->session->get('shipping.shipping', 0)) ? \c006\shipping\assets\AppHelper::getShippingRule($this->session->get('shipping.shipping'))['flat_rate'] : 0.00;
+            /* ToDo : Setup Tax */
             $order->tax = 0.00;
+            $order->status_id = AppPrefs::getPreference('order_status_default');
             $order->total = ($order->subtotal + $order->shipping + $order->tax + 0.00);
             $order->timestamp = time();
 
+            $coupons = $this->session->get('coupon', []);
+
             /* Check transaction  */
-
             $authorizeNet = new AppAuthorizeNet();
-
 
             if ($this->session->get('transaction_type') == '1') {
                 $response = $authorizeNet->actionCreditCard($billing, $order->total, strtoupper(CoreHelper::formatUrl(AppPrefs::getPreference('store_name'))));
@@ -292,9 +305,6 @@ class CheckoutController extends Controller
             if ($response != FALSE) {
 
                 $trans_fee = 0.00;
-                $trans_desc = "Remote IP: " . $_SERVER['REMOTE_ADDR'];
-
-
 
                 if (!$order->save()) {
                     echo "checkout_orders" . PHP_EOL;
@@ -309,7 +319,8 @@ class CheckoutController extends Controller
                 $checkout_transaction->transaction_id = $response['transaction_id'];
                 $checkout_transaction->auth = $response['auth'];
                 $checkout_transaction->fee = $trans_fee;
-                $checkout_transaction->description = $trans_desc;
+                $checkout_transaction->remote_ip = $_SERVER['REMOTE_ADDR'];
+                $checkout_transaction->description = '';
                 $checkout_transaction->timestamp = time();
                 if (!$checkout_transaction->save()) {
                     echo "checkout_transaction" . PHP_EOL;
@@ -328,6 +339,7 @@ class CheckoutController extends Controller
                     $checkout_shipping->state = $shipping['state'];
                     $checkout_shipping->postal_code = $shipping['postal_code'];
                     $checkout_shipping->country = $shipping['country'];
+                    $checkout_shipping->shipping = \c006\shipping\assets\AppHelper::getShippingRule($shipping['shipping'])['service_name'];
 //            print_r($checkout_shipping); exit;
                     if (!$checkout_shipping->save()) {
                         echo "checkout_shipping" . PHP_EOL;
@@ -335,6 +347,23 @@ class CheckoutController extends Controller
                         exit;
                     }
                 }
+
+
+                if (sizeof($coupons)) {
+                    foreach ($coupons as $item) {
+                        $checkout_coupon = new CheckoutCoupon();
+                        $checkout_coupon->order_id = $order->id;
+                        $checkout_coupon->coupon_id = $item['coupon_id'];
+                        $checkout_coupon->code = $item['code'];
+                        $checkout_coupon->amount = $item['value'];
+                        if (!$checkout_coupon->save()) {
+                            echo "$checkout_coupon" . PHP_EOL;
+                            print_r($checkout_coupon->getErrors());
+                            exit;
+                        }
+                    }
+                }
+
 
                 foreach ($cart->getCartItems() as $item) {
                     $checkout_item = new CheckoutItem();
@@ -350,16 +379,17 @@ class CheckoutController extends Controller
                         exit;
                     }
 
-                    $checkout_link = new CheckoutLink();
-                    $checkout_link->order_id = $order->id;
-                    $checkout_link->item_id = $checkout_item->id;
-                    $checkout_link->shipping_id = ($shipping['address']) ? $checkout_shipping->id : 0;
-                    if (!$checkout_link->save()) {
-                        echo "checkout_link" . PHP_EOL;
-                        print_r($checkout_link->getErrors());
-                        exit;
-                    }
+//                    $checkout_link = new CheckoutLink();
+//                    $checkout_link->order_id = $order->id;
+//                    $checkout_link->item_id = $checkout_item->id;
+//                    $checkout_link->shipping_id = ($shipping['address']) ? $checkout_shipping->id : 0;
+//                    if (!$checkout_link->save()) {
+//                        echo "checkout_link" . PHP_EOL;
+//                        print_r($checkout_link->getErrors());
+//                        exit;
+//                    }
                 }
+
 
                 $this->session->save('order_id', $order->id);
 

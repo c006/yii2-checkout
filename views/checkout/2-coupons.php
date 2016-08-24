@@ -14,7 +14,7 @@ use yii\helpers\Html;
                 <?= yii\base\View::render('@c006/coupon/views/frontend/index', ['return_url'=> $return_url]) ?>
             </div>
             <div class="table-cell vertical-align-top padding-10">
-
+                <?= yii\base\View::render('@c006/cart/views/cart/mini-cart', []) ?>
             </div>
         </div>
     </div>

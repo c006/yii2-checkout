@@ -14,22 +14,22 @@ use yii\widgets\ActiveForm;
 <style>
 
     div.text {
-        font-size: 1.0em;
-        font-weight: 300;
-        color: #666666;
-        line-height: 1.5em;
-    }
+        font-size   : 1.0em;
+        font-weight : 300;
+        color       : #666666;
+        line-height : 1.5em;
+        }
 
     .border-container {
-        display: block;
-        padding: 10px;
-        margin: 5px;
-        min-height: 180px;
-        border: 1px solid #CCCCCC;
-        -webkit-border-radius: 5px;
-        -moz-border-radius: 5px;
-        border-radius: 5px;
-    }
+        display               : block;
+        padding               : 10px;
+        margin                : 5px;
+        min-height            : 180px;
+        border                : 1px solid #CCCCCC;
+        -webkit-border-radius : 5px;
+        -moz-border-radius    : 5px;
+        border-radius         : 5px;
+        }
 </style>
 
 <div class="title-large">Summary</div>
@@ -38,11 +38,9 @@ use yii\widgets\ActiveForm;
 
 <div id="summay-container">
 
+    <?php $form = ActiveForm::begin(['id' => 'checkout-' . time()]); ?>
+
     <div class="item-container">
-
-        <?= yii\base\View::render('@c006/cart/views/cart/_items', ['is_summary' => TRUE, 'items' => $cart]) ?>
-
-        <?php $form = ActiveForm::begin([]); ?>
 
         <div class="form-group">
             <div class="table">
@@ -57,6 +55,7 @@ use yii\widgets\ActiveForm;
                         <?php endif; ?>
                     </div>
                 </div>
+
                 <div class="table-cell vertical-align-top width-50 padding-10">
                     <div class="border-container">
                         <div class="title-heading">Billing</div>
@@ -70,7 +69,7 @@ use yii\widgets\ActiveForm;
                             <div class="text"><?= $billing['bt_name'] ?></div>
                             <div class="text">****<?= substr($billing['bt_account'], -4) ?></div>
                             <div class="text"><?= $billing['bt_routing'] ?></div>
-                            <?php else : ?>
+                        <?php else : ?>
                             No billing needed
                         <?php endif; ?>
                     </div>
@@ -78,9 +77,14 @@ use yii\widgets\ActiveForm;
             </div>
         </div>
     </div>
+
+    <div class="item-container form-group align-right margin-top-10">
+        <?= yii\base\View::render('@c006/cart/views/cart/_items', ['is_summary' => TRUE, 'items' => $cart]) ?>
+    </div>
+
     <div class="form-group align-right margin-top-10">
         <?= Html::submitButton('Complete Order', ['class' => 'btn btn-primary', 'id' => 'button-continue']) ?>
-        <input type="hidden" name="Checkout" value="<?= Yii::$app->session->id ?>"/>
+        <input type="hidden" name="Checkout" value="<?= md5(session_id()) ?>"/ >
     </div>
 
 
