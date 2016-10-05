@@ -24,7 +24,7 @@ use yii\widgets\ActiveForm;
 
 <?= yii\base\View::render('_progress', ['array' => \c006\checkout\assets\AppProgress::progress()]) ?>
 
-<div id="shipping-container">
+<div id="billing-container">
 
     <div class="item-container margin-top-20 margin-bottom-20">
         <div class="title-medium">Payment Type</div>
