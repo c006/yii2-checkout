@@ -1,0 +1,23 @@
+{
+  "name": "c006/yii2-checkout",
+  "description": "Checkout Module",
+  "type": "yii2-extension",
+  "keywords": [
+    "yii2"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jon Chambers",
+      "email": "jchambers.dev@gmail.com"
+    }
+  ],
+  "require-dev": {
+    "c006/yii2-core": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "c006\\checkout\\": ""
+    }
+  }
+}
